@@ -134,3 +134,9 @@ public
 .anchor/
 test-ledger/
 validator-keypair.json
+
+# Rust build artifacts
+target/
+
+# Next.js build artifacts
+.next/
