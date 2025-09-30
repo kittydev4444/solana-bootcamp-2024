@@ -1,0 +1,34 @@
+pub mod constants;
+pub mod error;
+pub mod instructions;
+pub mod state;
+
+use anchor_lang::prelude::*;
+
+pub use constants::*;
+pub use instructions::*;
+pub use state::*;
+
+declare_id!("HznT2WbzVhqCUejqS7qZtXLhu1viB4osLrEw9fZrHdpw");
+
+#[program]
+pub mod swap {
+    use crate::take_offer::withdraw_and_close_vault;
+
+    use super::*;
+
+    pub fn make_offer(
+        ctx: Context<MakeOffer>,
+        id: u64,
+        token_a_offered_amount: u64,
+        token_b_wanted_amount: u64,
+    ) -> Result<()> {
+        send_offered_tokens_to_vault(&ctx, token_a_offered_amount)?;
+        save_offer(ctx, id, token_b_wanted_amount)
+    }
+
+    pub fn take_offer(ctx: Context<TakeOffer>) -> Result<()> {
+        send_wanted_tokens_to_maker(&ctx)?;
+        withdraw_and_close_vault(ctx)
+    }
+}
